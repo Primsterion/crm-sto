@@ -129,4 +129,13 @@ export default {
        max-width: 750px;
     }
 
+    .client-work-modal{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: #000000bb;
+    }
+
 </style>

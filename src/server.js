@@ -87,7 +87,7 @@ app.get('/clt', (req, res) => {
 
 //Показать работы
 app.get('/clt/works', (req, res) => {
-    const sql = `SELECT clients.fio, clients.tel, clients.auto, clients.address, works.status, works.work_type_id, employers.fio_employer, employers.position, employers.INN FROM clients
+    const sql = `SELECT clients.fio, clients.tel, clients.auto, clients.date, clients.address, works.status, works.work_type_id, employers.fio_employer, employers.position, employers.INN FROM clients
     INNER JOIN works ON works.client_id = clients.client_id
     INNER JOIN employers ON works.employer_id = employers.employer_id
     WHERE clients.client_id = ${req.query.id}`;

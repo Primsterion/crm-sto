@@ -7,6 +7,7 @@
         <p>Телефон: {{client.tel}}</p>
         <p>Адрес: {{client.address}}</p>
         <p>Авто: {{client.auto}}</p>
+        <p>Дата обращения: {{ client.date }}</p>
         <hr>
         <p><strong>Информация о работнике</strong></p>
         <p>ФИО: {{employer.fio}}</p>
@@ -16,7 +17,7 @@
         <p><strong>Информация о проводимых работах</strong></p>
         <p>Список работ</p>
         <ul>
-            <li v-for="(sub_work, index) in work.sub_works" :key="index">Название: {{sub_work.work_type_name}} - {{sub_work.work_type_sum}} р</li>
+            <li v-for="(sub_work, index) in work.sub_works" :key="index">{{sub_work.work_type_name}} - {{sub_work.work_type_sum}} р</li>
         </ul>
         <p>Текущий статус: {{work.status}}</p>
         <p>Сумма работ: {{work.sum}} р</p>
@@ -38,7 +39,8 @@ export default {
                 fio: '',
                 tel: '',
                 address: '',
-                auto: ''
+                auto: '',
+                date: ''
             },
 
             employer: {
@@ -67,6 +69,7 @@ export default {
                 this.client.tel = resp.data[0].tel;
                 this.client.address = resp.data[0].address;
                 this.client.auto = resp.data[0].auto;
+                this.client.date = new Date(resp.data[0].date).toLocaleDateString();
                 this.employer.fio = resp.data[0].fio_employer;
                 this.employer.position = resp.data[0].position;
                 this.employer.INN = resp.data[0].INN;
@@ -105,5 +108,28 @@ export default {
         transform: translate(-50%, -50%);
         background: #fff;
         border-radius: 5px;
+    }
+
+    h1{
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    ul li{
+        list-style: none;
+        margin-bottom: 10px;
+    }
+
+    ul li:last-child{
+        margin-bottom: 0;
+    }
+
+    ul{
+        background: #eee;
+        padding: 20px;
+    }
+
+    button{
+        min-width: 100px;
     }
 </style>
