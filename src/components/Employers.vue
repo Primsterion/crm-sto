@@ -76,7 +76,7 @@ export default {
 
         search(data){
             if(data.value){
-                const regex = new RegExp(`${data.value}`, 'u');
+                const regex = new RegExp(`${data.value}`, 'i');
                 console.log(regex);
                 this.employers_copy = this.employers.filter(employer => {
                     console.log(employer.fio_employer);
@@ -85,7 +85,7 @@ export default {
                     }
                 });
             }else{
-                this.getEmployers();
+                this.employers_copy = this.employers;
             }
             
         }
