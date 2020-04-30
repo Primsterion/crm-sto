@@ -1,6 +1,12 @@
 <template>
    <div class="employers">
-       <SearchField @search="search" />
+       <div class="employers-actions">
+            <div class="employer-add">
+                <button class="primary" @click="showEmployerAdd = true">Добавить</button>
+            </div>
+            <SearchField @search="search" placeholder_prop="Введите ФИО сотрудника..."/>
+       </div>
+       
         <div class="employers-header">
             <p class="fio">ФИО</p>
             <p class="tel">Телефон</p>
@@ -11,9 +17,7 @@
         <div class="employers-content">
             <Employer v-for="(employer, index) in employers_copy" :key="index" v-bind="employer" @remove="remove(index)" @edit="edit(index)"/>
         </div>
-        <div class="employer-add">
-            <button class="primary" @click="showEmployerAdd = true">Добавить</button>
-        </div>
+        
         <div class="employer-form" v-if="showEmployerAdd">
             <EmployerAdd @hide-add="showEmployerAdd = false" @refresh="getEmployers"/>
         </div>
@@ -77,9 +81,7 @@ export default {
         search(data){
             if(data.value){
                 const regex = new RegExp(`${data.value}`, 'i');
-                console.log(regex);
                 this.employers_copy = this.employers.filter(employer => {
-                    console.log(employer.fio_employer);
                     if(employer.fio_employer.match(regex)){
                         return employer;
                     }
@@ -94,6 +96,12 @@ export default {
 </script>
 
 <style scoped>
+.employers-actions{
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+}
+
  .employers-header{
     display: flex;
     justify-content: space-between;
@@ -103,6 +111,7 @@ export default {
     font-weight: 600;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
+    padding-right: 15px;
 }
     
 .employers-header p{
@@ -113,10 +122,6 @@ export default {
 .employers{
     width: 90%;
     margin: 20px auto;
-}
-
-.employer-add{
-    margin-top: 30px;
 }
 
 .employers-content{

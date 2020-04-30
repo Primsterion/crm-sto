@@ -1,5 +1,5 @@
 <template>
-    <form class="popup-add-employer-form">
+    <form class="popup-add-employer-form modal-form">
         <ErrorAlert text="Ошибка! Заполните все поля" v-if="error"/>
         <p>ФИО</p>
         <input type="text" name="fio" v-model="fio">
@@ -11,7 +11,7 @@
         <input type="text" name="position" v-model="position">
         <p>ИНН</p>
         <input type="text" name="INN" v-model="INN">
-        <div class="employer-add-actions">
+        <div class="employer-add-actions buttons">
             <button class="primary" @click.prevent="validation">Подтвердить</button>
             <button class="delete" @click.prevent="hideAddEmployer">Отмена</button>
         </div>
@@ -86,9 +86,5 @@ export default {
         width: 100%;
         display: flex;
         justify-content: space-between;
-    }
-
-    button{
-        margin: 10px -20px 10px 0;
     }
 </style>

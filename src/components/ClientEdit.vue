@@ -1,5 +1,5 @@
 <template>
-        <form class="popup-edit-client-form">
+        <form class="popup-edit-client-form modal-form">
             <ErrorAlert text="Ошибка! Заполните все поля" v-if="error"/>
             <p>ФИО</p>
             <input type="text" name="fio" v-model="fio">
@@ -9,8 +9,9 @@
             <input type="text" name="address" v-model="address">
             <p>Автомобиль</p>
             <input type="text" name="auto" v-model="auto">
-            <input type="hidden" name="data" v-model="date"><br>
-            <div class="client-add-actions">
+            <p>VIN</p>
+            <input type="text" name="vin" v-model="vin">
+            <div class="client-add-actions buttons">
                 <button class="primary" @click.prevent="validation">Сохранить</button>
                 <button class="delete" @click.prevent="closePopUp">Отмена</button>
             </div>
@@ -32,7 +33,7 @@ export default {
         tel_prop: String,
         address_prop: String,
         auto_prop: String,
-        date_prop: String,
+        vin_prop: String
     },
 
     data: function(){
@@ -41,7 +42,7 @@ export default {
             tel: this.tel_prop,
             address: this.address_prop,
             auto: this.auto_prop,
-            date: this.date_prop,
+            vin: this.vin_prop,
             client_id: this.client_id_prop,
             error: false
         }
@@ -91,8 +92,5 @@ export default {
          width: 100%;
          display: flex;
          justify-content: space-between;
-     }
-     button{
-         margin: 10px -20px 10px 0;
      }
 </style>

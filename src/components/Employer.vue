@@ -5,7 +5,6 @@
       <p class="address">{{ address_employer }}</p>
       <p class="position">{{ position }}</p>
       <div class="client-action">
-          <button class="primary">Показать работу</button>
           <button class="edit" @click="edit">Изменить</button>
           <button class="delete" @click="remove">Удалить</button>
       </div>

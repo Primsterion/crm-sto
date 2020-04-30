@@ -29,11 +29,19 @@ p{
 
 input{
   width: 100%;
+  box-sizing: border-box;
   border: 1px solid #1e88e5;
   border-radius: 4px;
   padding: 10px;
   outline: none;
 }
+
+input.search{
+  max-width: 350px;
+  margin-left: 15px;
+}
+
+
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -66,6 +74,42 @@ button.edit{
 
 button.delete{
   background: #DD2C00;
+}
+
+.modal-form{
+  background: #fff;
+  color: #000;
+  padding: 15px;
+}
+
+.modal-form .buttons{
+  margin: 10px 0;
+}
+
+.modal{
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background: #00000099;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content{
+  width: 65%;
+  min-height: 300px;
+  background: #fff;
+  padding: 0 15px 15px 15px;
+}
+
+.modal-content .buttons{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
 }
 
 </style>

@@ -77,7 +77,7 @@ app.post('/emp/del', (req, res) => {
 //=============Клиенты==============
 //Получить клиентов
 app.get('/clt', (req, res) => {
-    const sql = `SELECT client_id, fio, tel, auto, address, date FROM clients`;
+    const sql = `SELECT * FROM clients`;
 
     Connection.query(sql, (err, data) => {
         if(err) throw err;
@@ -87,7 +87,7 @@ app.get('/clt', (req, res) => {
 
 //Показать работы
 app.get('/clt/works', (req, res) => {
-    const sql = `SELECT clients.fio, clients.tel, clients.auto, clients.date, clients.address, works.status, works.work_type_id, employers.fio_employer, employers.position, employers.INN FROM clients
+    const sql = `SELECT clients.fio, clients.tel, clients.auto, clients.date, clients.address, clients.vin, works.status, works.work_type_id, employers.fio_employer, employers.position, employers.INN FROM clients
     INNER JOIN works ON works.client_id = clients.client_id
     INNER JOIN employers ON works.employer_id = employers.employer_id
     WHERE clients.client_id = ${req.query.id}`;
@@ -124,7 +124,17 @@ app.get('/clt/sub-works', (req, res) => {
 
 //Изменить клиента
 app.post('/clt/edit', (req, res) => {
-    const sql = `UPDATE clients SET fio = '${req.body.data.fio}', tel='${req.body.data.tel}', address='${req.body.data.address}', auto='${req.body.data.auto}' WHERE client_id = ${req.body.data.id}`;
+    const sql = `UPDATE clients SET fio = '${req.body.data.fio}', tel='${req.body.data.tel}', address='${req.body.data.address}', auto='${req.body.data.auto}', vin='${req.body.data.vin}' WHERE client_id = ${req.body.data.id}`;
+
+    Connection.query(sql, (err) => {
+        if(err) throw err;
+        res.send('ok');
+    });
+});
+
+//Добавить клиента
+app.post('/clt/add', (req, res) => {
+    const sql = `INSERT INTO clients(fio, tel, address, auto, vin, date) VALUES ('${req.body.data.fio}', '${req.body.data.tel}', '${req.body.data.address}', '${req.body.data.auto}', '${req.body.data.vin}', '${req.body.data.date}')`;
 
     Connection.query(sql, (err) => {
         if(err) throw err;

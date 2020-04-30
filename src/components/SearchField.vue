@@ -1,16 +1,20 @@
 <template>
   <div class="search-field">
-      <p>Поиск</p>
-      <input type="text" name="fio" id="fio" placeholder="Введите ФИО..." @change="change" v-model="value">
+      <input type="text" name="fio" id="fio" :placeholder="placeholder" v-model="value">
+      <button class="primary" @click="change">Поиск</button>
   </div>
 </template>
 
 <script>
 export default {
     name: 'SearchField',
+    props:{
+        placeholder_prop: String
+    },
     data(){
         return{
-            value: ''
+            value: '',
+            placeholder: this.placeholder_prop
         }
     },
     methods: {
@@ -25,7 +29,8 @@ export default {
 
 <style>
     .search-field{
-        margin-bottom: 15px;
-        width: 20%;
+        width: 425px;
+        display: flex;
+        margin-left: 15px;
     }
 </style>

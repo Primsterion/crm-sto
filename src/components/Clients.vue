@@ -1,5 +1,10 @@
 <template>
-  <div class="clients">
+    <div class="clients">
+        <div class="clients-actions">
+            <button class="primary" @click="showModalAdd = true">Добавить</button>
+            <input type="text" class="search" placeholder="Введите ФИО клиента" v-model="searchValue">
+            <button class="primary" @click="searchClient">Поиск</button>
+        </div>
         <div class="clients-header">
             <p class="fio">ФИО</p>
             <p class="tel">Телефон</p>
@@ -17,7 +22,7 @@
                 :tel_prop="clients[currentClientId].tel"
                 :address_prop="clients[currentClientId].address"
                 :auto_prop="clients[currentClientId].auto"
-                :date_prop="clients[currentClientId].date"
+                :vin_prop="clients[currentClientId].vin"
                 :client_id_prop="clients[currentClientId].client_id"
             />
         </div>
@@ -26,6 +31,34 @@
                 @close-pop-up="showModalWorks = false" 
                 :client_id="clients[currentClientId].client_id"
             />
+        </div>
+        <div class="modal" v-if="showModalAdd">
+            <div class="modal-content">
+                <div class="form-group">
+                    <p>ФИО</p>
+                    <input type="text" v-model="newClient.fio">
+                </div>
+                <div class="form-group">
+                    <p>Номер телефона</p>
+                    <input type="text" v-model="newClient.tel">
+                </div>
+                <div class="form-group">
+                    <p>Адрес</p>
+                    <input type="text" v-model="newClient.address">
+                </div>
+                <div class="form-group">
+                    <p>Автомобиль</p>
+                    <input type="text" v-model="newClient.auto">
+                </div>
+                <div class="form-group">
+                    <p>VIN код автомобиля</p>
+                    <input type="text" v-model="newClient.vin">
+                </div>
+                <div class="buttons">
+                    <button class="primary" @click="saveClient">Добавить</button>
+                    <button class="delete" @click="showModalAdd = false">Отмена</button>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -44,9 +77,19 @@ export default {
         return{
             clients: [],
             clients_copy: [],
+            newClient: {
+                fio: '',
+                tel: '',
+                address: '',
+                auto: '',
+                vin: '',
+                date: new Date().toLocaleDateString().split('.').reverse().join('-')
+            },
             currentClientId: 0,
             showModalEdit: false,
-            showModalWorks: false
+            showModalWorks: false,
+            showModalAdd: false,
+            searchValue: ''
         }
     },
     mounted(){
@@ -76,14 +119,51 @@ export default {
             axios.get('http://localhost:48656/clt')
                 .then(response => (this.clients = response.data))
                 .then(() => {
-                    this.clients_copy = this.clients.slice();
+                    this.clients_copy = this.clients.concat();
             });
+        },
+
+        saveClient(){
+           if(!this.validate()){
+               alert('Заполните все поля!');
+           }else{
+               axios.post('http://localhost:48656/clt/add', {
+                   data: this.newClient
+               })
+               .then(() => {this.showModalAdd = false})
+               .then(this.getClients);
+               
+           }
+        },
+
+        searchClient(){
+            if(!this.searchValue){
+                this.clients = this.clients_copy.concat();
+            }else{
+                const regex = new RegExp(`${this.searchValue}`, 'i');
+                this.clients = this.clients.filter((client) => (client.fio.match(regex)));
+            }
+        },
+
+        validate(){
+            for(const value in this.newClient){
+                if(this.newClient[value].length === 0){
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
 </script>
 
 <style scoped>
+
+    .clients-actions{
+        margin: 15px 0;
+    }
+
     .clients-header{
         display: flex;
         justify-content: space-between;
@@ -93,6 +173,7 @@ export default {
         font-weight: 600;
         border-top-left-radius: 4px;
         border-top-right-radius: 4px;
+        padding-right: 15px;
     }
         
     .clients-header p{
