@@ -2,7 +2,7 @@
    <div class="employers">
        <div class="employers-actions">
             <div class="employer-add">
-                <button class="primary" @click="showEmployerAdd = true">Добавить</button>
+                <button class="primary" @click="showEmployerAdd = true">Добавить сотрудника</button>
             </div>
             <SearchField @search="search" placeholder_prop="Введите ФИО сотрудника..."/>
        </div>

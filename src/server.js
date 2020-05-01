@@ -87,7 +87,7 @@ app.get('/clt', (req, res) => {
 
 //Показать работы
 app.get('/clt/works', (req, res) => {
-    const sql = `SELECT clients.fio, clients.tel, clients.auto, clients.date, clients.address, clients.vin, works.status, works.work_type_id, employers.fio_employer, employers.position, employers.INN FROM clients
+    const sql = `SELECT clients.fio, clients.tel, clients.auto, clients.date, clients.address, clients.vin, works.work_id, works.status, works.work_type_id, employers.fio_employer, employers.position, employers.INN FROM clients
     INNER JOIN works ON works.client_id = clients.client_id
     INNER JOIN employers ON works.employer_id = employers.employer_id
     WHERE clients.client_id = ${req.query.id}`;
@@ -124,7 +124,8 @@ app.get('/clt/sub-works', (req, res) => {
 
 //Изменить клиента
 app.post('/clt/edit', (req, res) => {
-    const sql = `UPDATE clients SET fio = '${req.body.data.fio}', tel='${req.body.data.tel}', address='${req.body.data.address}', auto='${req.body.data.auto}', vin='${req.body.data.vin}' WHERE client_id = ${req.body.data.id}`;
+    const { id, fio, tel, address, auto, vin } = req.body.data;
+    const sql = `UPDATE clients SET fio = '${fio}', tel='${tel}', address='${address}', auto='${auto}', vin='${vin}' WHERE client_id = ${id}`;
 
     Connection.query(sql, (err) => {
         if(err) throw err;
@@ -134,13 +135,49 @@ app.post('/clt/edit', (req, res) => {
 
 //Добавить клиента
 app.post('/clt/add', (req, res) => {
-    const sql = `INSERT INTO clients(fio, tel, address, auto, vin, date) VALUES ('${req.body.data.fio}', '${req.body.data.tel}', '${req.body.data.address}', '${req.body.data.auto}', '${req.body.data.vin}', '${req.body.data.date}')`;
+    const { fio, tel, address, auto, vin, date } = req.body.data;
+    const sql = `INSERT INTO clients(fio, tel, address, auto, vin, date) VALUES ('${fio}', '${tel}', '${address}', '${auto}', '${vin}', '${date}')`;
 
     Connection.query(sql, (err) => {
         if(err) throw err;
         res.send('ok');
     });
 });
+
+//==============РАБОТЫ===============
+
+//Получить все работы
+app.get('/works', (req, res) => {
+    const sql = `SELECT clients.fio, clients.tel, clients.auto, clients.date, clients.address, clients.vin, works.work_id, works.status, works.work_type_id, employers.fio_employer, employers.position, employers.INN FROM clients INNER JOIN works ON works.client_id = clients.client_id INNER JOIN employers ON works.employer_id = employers.employer_id WHERE clients.client_id = works.client_id`;
+
+    Connection.query(sql, (err, data) => {
+        if (err) throw err;
+        res.send(data);
+    })
+});
+
+
+//Получить все типы работ
+app.get('/work-types', (req, res) => {
+    const sql = `SELECT * FROM work_types`;
+
+    Connection.query(sql, (err, data) => {
+        if (err) throw err;
+        res.send(data);
+    });
+});
+
+//Изменить статус работы
+app.post('/works/save-status', (req, res) => {
+    const { status, id } = req.body.data;
+
+    const sql = `UPDATE works SET status = '${status}' WHERE work_id = ${id}`;
+
+    Connection.query(sql, (err) => {
+        if (err) throw err;
+        res.send('ok');
+    });
+})
 
 const port = 48656;
 

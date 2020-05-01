@@ -1,7 +1,7 @@
 <template>
     <div class="clients">
         <div class="clients-actions">
-            <button class="primary" @click="showModalAdd = true">Добавить</button>
+            <button class="primary" @click="showModalAdd = true">Добавить клиента</button>
             <input type="text" class="search" placeholder="Введите ФИО клиента" v-model="searchValue">
             <button class="primary" @click="searchClient">Поиск</button>
         </div>
@@ -17,7 +17,7 @@
             <Client v-for="(client, index) in clients" :key="index" v-bind="client" @edit="edit(index)" @get_works="getWorks(index)"/>
         </div>
         <div v-if="showModalEdit" class="client-form">
-            <ClientEdit @refresh="getClients" @close-pop-up="showModalEdit = false"
+            <ClientEdit @refresh="refreshClients" @close-pop-up="showModalEdit = false"
                 :fio_prop="clients[currentClientId].fio"
                 :tel_prop="clients[currentClientId].tel"
                 :address_prop="clients[currentClientId].address"
@@ -116,11 +116,17 @@ export default {
         },
 
         getClients(){
+            console.log('ok');
             axios.get('http://localhost:48656/clt')
                 .then(response => (this.clients = response.data))
                 .then(() => {
                     this.clients_copy = this.clients.concat();
             });
+        },
+
+        refreshClients(){
+            this.getClients();
+            this.showModalEdit = false;
         },
 
         saveClient(){

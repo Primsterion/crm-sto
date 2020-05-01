@@ -21,6 +21,7 @@ export default {
 *{
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 p{
@@ -39,6 +40,15 @@ input{
 input.search{
   max-width: 350px;
   margin-left: 15px;
+}
+
+select{
+  box-sizing: border-box;
+  border: 1px solid #1e88e5;
+  border-radius: 4px;
+  padding: 10px;
+  outline: none;
+  min-width: 300px;
 }
 
 
@@ -100,7 +110,7 @@ button.delete{
 
 .modal-content{
   width: 65%;
-  min-height: 300px;
+  min-height: 100px;
   background: #fff;
   padding: 0 15px 15px 15px;
 }

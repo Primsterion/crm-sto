@@ -48,19 +48,19 @@ export default {
         }
     },
     methods: {
-        async saveClient(){
+        saveClient(){
             const data = {
                 id: this.client_id,
                 fio: this.fio,
                 tel: this.tel,
                 address: this.address,
                 auto: this.auto,
+                vin: this.vin,
                 date: this.date
             }
             axios.post('http://localhost:48656/clt/edit', {
                 data: data
             })
-            .then(this.closePopUp())
             .then(this.$emit('refresh'));
         },
 
