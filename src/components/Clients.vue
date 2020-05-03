@@ -143,13 +143,12 @@ export default {
         },
 
         searchClient(){
-            if(!this.searchValue){
-                this.clients = this.clients_copy.concat();
-            }else{
+            this.clients = this.clients_copy.concat();
+            if(this.searchValue){
                 const regex = new RegExp(`${this.searchValue}`, 'i');
                 this.clients = this.clients.filter((client) => (client.fio.match(regex)));
             }
-        },
+        },  
 
         validate(){
             for(const value in this.newClient){

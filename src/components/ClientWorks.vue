@@ -43,7 +43,7 @@
             <hr>
             <p><strong>Информация о проводимых работах</strong></p>
             <p>Список работ</p>
-            <ul>
+            <ul class="sub-works">
                 <li v-for="(sub_work, index) in work.sub_works" :key="index">{{sub_work.work_type_name}} - {{sub_work.work_type_sum}} р</li>
             </ul>
             <p>Текущий статус: {{currentWork.status}}</p>
@@ -160,20 +160,6 @@ export default {
     h1{
         text-align: center;
         margin-bottom: 15px;
-    }
-
-    ul li{
-        list-style: none;
-        margin-bottom: 10px;
-    }
-
-    ul li:last-child{
-        margin-bottom: 0;
-    }
-
-    ul{
-        background: #eee;
-        padding: 20px;
     }
 
     button{

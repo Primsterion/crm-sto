@@ -122,6 +122,16 @@ app.get('/clt/sub-works', (req, res) => {
 
 });
 
+//Получить все подработы
+app.get('/work-types', (req, res) => {
+    const sql = `SELECT * FROM work_type`;
+
+    Connection.query(sql, (err, data) => {
+        if(err) throw err;
+        res.send(data);
+    });
+});
+
 //Изменить клиента
 app.post('/clt/edit', (req, res) => {
     const { id, fio, tel, address, auto, vin } = req.body.data;
@@ -178,6 +188,18 @@ app.post('/works/save-status', (req, res) => {
         res.send('ok');
     });
 })
+
+//Добавить работу
+app.post('/works/add', (req, res) => {
+    const {client_id, employer_id, work_types_id, status, date } = req.body.data;
+    const sql = `INSERT INTO works(client_id, employer_id, work_type_id, status, date) VALUES ('${client_id}', '${employer_id}', '${work_types_id}', '${status}', '${date}')`;
+    
+    Connection.query(sql, (err) => {
+        if (err) throw err;
+        res.send('ok');
+    });
+    
+});
 
 const port = 48656;
 

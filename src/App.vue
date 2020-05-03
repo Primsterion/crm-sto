@@ -48,7 +48,7 @@ select{
   border-radius: 4px;
   padding: 10px;
   outline: none;
-  min-width: 300px;
+  min-width: 400px;
 }
 
 
@@ -121,5 +121,29 @@ button.delete{
   justify-content: space-between;
   margin: 10px 0;
 }
+
+ul.sub-works{
+  background: #eee;
+  padding: 20px;
+}
+
+ul.sub-works li{
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  cursor: pointer;
+  list-style: none;
+  margin-bottom: 10px;
+}
+
+ul.sub-works li:last-child{
+  margin-bottom: 0;
+}
+
+.hide{
+  display: none !important;
+}
+
+
 
 </style>

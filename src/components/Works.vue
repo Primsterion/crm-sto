@@ -1,7 +1,7 @@
 <template>
     <div class="works-list">
         <div class="work-list-actions">
-            <button class="primary">Добавить работу</button>
+            <button class="primary" @click="getInfoToAddWorkForm">Добавить работу</button>
             <div class="search-form">
                 <input type="text" placeholder="Введите ФИО клиента..." v-model="searchValue">
                 <button class="primary" @click="searchWork">Поиск</button>
@@ -35,6 +35,41 @@
                 </div>
             </div>
         </div>
+        <div class="modal" v-if="showModalAddWork">
+            <div class="modal-content">
+                <div class="form-group">
+                    <p>Выбор клиента</p>
+                    <select name="" v-model="newWork.client_id">
+                        <option value="" selected disabled>ФИО | телефон</option>
+                        <option v-for="(client, index) in workFormInfo.clients" :key="index" :value="client.client_id">{{ client.fio }} | {{ client.tel }}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <p>Выбор сотрудника</p>
+                    <select name="" v-model="newWork.employer_id">
+                        <option value="" selected disabled>ФИО | должность</option>
+                        <option v-for="(employer, index) in workFormInfo.employers" :key="index" :value="employer.employer_id">{{ employer.fio_employer }} | {{ employer.position }}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <p>Формирование списка услуг</p>
+                    <select name="" v-model="workFormInfo.currentWorkType">
+                        <option value="" selected disabled>Услуга | цена</option>
+                        <option v-for="(workType, index) in workFormInfo.workTypes" :key="index" :value="workType" :class="{hide: workType.disable}">{{ workType.work_type_name }} | {{ workType.work_type_sum }}</option>
+                    </select>
+                    <p><button class="primary" @click="addWorkType">Добавить услугу</button></p>
+                    <p>Выбранные услуги</p>
+                    <ul class="sub-works">
+                        <li v-for="work in workFormInfo.selectedWorkTypes" :key="work.work_type_id">{{ work.work_type_name }} - {{ work.work_type_sum }} <span class="del" @click="removeWorkType(work.work_type_id)">&times;</span></li>
+                    </ul>
+                    <p>Итоговая сумма работ: {{ workFormInfo.total }} р</p>
+                </div>
+                <div class="buttons">
+                    <button class="primary" @click="saveWork">Сохранить</button>
+                    <button class="delete" @click="showModalAddWork = false">Отмена</button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -49,8 +84,24 @@ export default {
         return {
             works: [],
             works_copy: [],
+            workFormInfo: {
+                clients: [],
+                employers: [],
+                workTypes: [],
+                currentWorkType: {},
+                selectedWorkTypes: [],
+                total: 0
+            },
+            newWork: {
+                client_id: '',
+                employer_id: '',
+                work_types_id: '',
+                status: 'В ожидании',
+                date: new Date().toLocaleDateString().split('.').reverse().join('-')
+            },
             currentWorkIndex: null,
             showModalChangeStatus: false,
+            showModalAddWork: false,
             status: '',
             searchValue: ''
         }
@@ -67,6 +118,80 @@ export default {
                 .then(() => { this.works_copy = this.works.concat(); }) 
         },
 
+        async getInfoToAddWorkForm(){
+            await this.getAllClients();
+            await this.getAllEmployers();
+            await this.getAllWorkTypes();
+            this.showModalAddWork = true;
+        },
+
+        getAllClients(){
+            axios.get('http://localhost:48656/clt')
+                .then(resp => (this.workFormInfo.clients = resp.data))
+        },
+
+        getAllEmployers(){
+            axios.get('http://localhost:48656/emp/get')
+                .then(resp => (this.workFormInfo.employers = resp.data))
+        },
+
+        getAllWorkTypes(){
+            axios.get('http://localhost:48656/work-types')
+                .then(resp => (this.workFormInfo.workTypes = resp.data))
+                .then(() => {
+                    for(let work of this.workFormInfo.workTypes){
+                        work['disable'] = false;
+                    }
+                })
+        },
+
+        updateTotal(){
+            this.workFormInfo.total = 0;
+            for(const work of this.workFormInfo.selectedWorkTypes){
+                this.workFormInfo.total += +work.work_type_sum;
+            }
+        },
+
+        addWorkType(){
+            this.workFormInfo.selectedWorkTypes.push(this.workFormInfo.currentWorkType);
+            for(let work of this.workFormInfo.workTypes){
+                if(work.work_type_id === this.workFormInfo.currentWorkType.work_type_id){
+                    work.disable = true;
+                }
+            }
+            this.updateTotal();
+            this.workFormInfo.currentWorkType = {};
+        },
+
+        removeWorkType(id){
+            this.workFormInfo.selectedWorkTypes = this.workFormInfo.selectedWorkTypes.filter((work) => work.work_type_id !== id);
+            const idsArr = [];
+            for(const work of this.workFormInfo.selectedWorkTypes){
+                idsArr.push(work.work_type_id);
+            }
+
+            for(const work of this.workFormInfo.workTypes){
+               if(idsArr.indexOf(work.work_type_id) === -1){
+                   work.disable = false;
+               }
+            }
+            this.updateTotal();
+            this.workFormInfo.currentWorkType = {};
+        },
+
+        saveWork(){
+            let work_types_id = [];
+            for(const work of this.workFormInfo.selectedWorkTypes){
+                work_types_id.push(work.work_type_id);
+            }
+
+            this.newWork.work_types_id = work_types_id.join(';');
+
+            axios.post('http://localhost:48656/works/add', {data: this.newWork })
+                .then(this.getWorks)
+                .then(() => {this.showModalAddWork = false});
+        },
+        
         saveStatus(){
             axios.post('http://localhost:48656/works/save-status', {
                 data: {
@@ -133,7 +258,7 @@ export default {
     }
 
     .work-list-actions{
-        margin-bottom: 15px;
+        margin: 15px 0;
     }
 
     .work-list-actions, .search-form{
@@ -143,6 +268,23 @@ export default {
     .search-form{
         width: 300px;
         margin-left: 15px;
+    }
+
+    span.del{
+        display: inline-block;
+        width: 20px;
+        text-align: center;
+        padding: 2px 0;
+        border-radius: 4px;
+        background: #ff0000;
+        color: #fff;
+        font-weight: 600;
+        transition: .2s;
+    }
+
+    span.del:hover{
+        background: #fff;
+        color: #ff0000;
     }
 
 </style>
