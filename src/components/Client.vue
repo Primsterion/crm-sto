@@ -8,6 +8,7 @@
       <div class="client-action">
           <button class="primary" @click="works">Работы</button>
           <button class="edit" @click="edit">Изменить</button>
+          <button class="delete" @click="remove">Удалить</button>
       </div>
   </div>
 </template>
@@ -29,6 +30,10 @@ export default {
 
         works(){
             this.$emit('get_works');
+        },
+        
+        remove(){
+            this.$emit('remove');
         }
     }
 }

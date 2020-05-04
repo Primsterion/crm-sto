@@ -14,7 +14,7 @@
             <p class="actions">Действия</p>
         </div>
         <div class="clients-content">
-            <Client v-for="(client, index) in clients" :key="index" v-bind="client" @edit="edit(index)" @get_works="getWorks(index)"/>
+            <Client v-for="(client, index) in clients" :key="index" v-bind="client" @edit="edit(index)" @get_works="getWorks(index)" @remove="deleteClient(index)"/>
         </div>
         <div v-if="showModalEdit" class="client-form">
             <ClientEdit @refresh="refreshClients" @close-pop-up="showModalEdit = false"
@@ -34,6 +34,7 @@
         </div>
         <div class="modal" v-if="showModalAdd">
             <div class="modal-content">
+                <h1>Добавление клиента</h1>
                 <div class="form-group">
                     <p>ФИО</p>
                     <input type="text" v-model="newClient.fio">
@@ -57,6 +58,15 @@
                 <div class="buttons">
                     <button class="primary" @click="saveClient">Добавить</button>
                     <button class="delete" @click="showModalAdd = false">Отмена</button>
+                </div>
+            </div>
+        </div>
+        <div class="modal remove-modal" v-if="showModalRemove">
+            <div class="modal-content">
+                <h1>Вы действительно хотите удалить клиента?</h1>
+                <div class="buttons">
+                    <button class="primary" @click="confirmDelete">Подтвердить</button>
+                    <button class="delete" @click="showModalRemove = false">Отмена</button>
                 </div>
             </div>
         </div>
@@ -89,6 +99,7 @@ export default {
             showModalEdit: false,
             showModalWorks: false,
             showModalAdd: false,
+            showModalRemove: false,
             searchValue: ''
         }
     },
@@ -110,22 +121,33 @@ export default {
             this.currentClientId = index;
         },
 
-        deleteClient(){
-            this.showModalRemove = false;
-            console.log(this.currentClientId);
+        confirmDelete(){
+
+            const index = +this.currentClientId;
+
+            axios.post('http://localhost:48656/clt/remove', {
+                data: {
+                    id: this.clients_copy[index].client_id
+                }
+            }).then(() => {
+                this.clients = this.clients_copy = this.clients_copy.filter(client => (+client.client_id != +this.clients_copy[index].client_id));
+                this.showModalRemove = false;
+            })
+        },
+
+        deleteClient(index){
+            this.showModalRemove = true;
+            this.currentClientId = index;
         },
 
         getClients(){
-            console.log('ok');
             axios.get('http://localhost:48656/clt')
                 .then(response => (this.clients = response.data))
-                .then(() => {
-                    this.clients_copy = this.clients.concat();
-            });
+                .then(() => { this.clients_copy = this.clients.concat(); console.log('client ok')});
         },
 
-        refreshClients(){
-            this.getClients();
+        async refreshClients(){
+            await this.getClients();
             this.showModalEdit = false;
         },
 
@@ -223,5 +245,7 @@ export default {
         height: 100vh;
         background: #000000bb;
     }
+
+    
 
 </style>

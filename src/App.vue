@@ -49,6 +49,7 @@ select{
   padding: 10px;
   outline: none;
   min-width: 400px;
+  width: 100%;
 }
 
 
@@ -87,6 +88,9 @@ button.delete{
 }
 
 .modal-form{
+  max-width: 65%;
+  min-width: 500px;
+  min-height: 100px;
   background: #fff;
   color: #000;
   padding: 15px;
@@ -109,10 +113,17 @@ button.delete{
 }
 
 .modal-content{
-  width: 65%;
+  max-width: 65%;
+  min-width: 500px;
   min-height: 100px;
   background: #fff;
-  padding: 0 15px 15px 15px;
+  padding: 15px;
+}
+
+.modal-content h1, .modal-form h1{
+  text-align: center;
+  margin-bottom: 5px;
+  font-size: 28px;
 }
 
 .modal-content .buttons{

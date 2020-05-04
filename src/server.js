@@ -154,6 +154,18 @@ app.post('/clt/add', (req, res) => {
     });
 });
 
+//Удалить клиента
+
+app.post('/clt/remove', (req, res) => {
+    const { id } = req.body.data;
+    const sql = `DELETE FROM clients WHERE client_id = '${id}'`;
+
+    Connection.query(sql, (err) => {
+        if(err) throw err;
+        res.send('ok');
+    });
+});
+
 //==============РАБОТЫ===============
 
 //Получить все работы

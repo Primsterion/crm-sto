@@ -48,7 +48,7 @@ export default {
         }
     },
     methods: {
-        saveClient(){
+        async saveClient(){
             const data = {
                 id: this.client_id,
                 fio: this.fio,
@@ -58,10 +58,8 @@ export default {
                 vin: this.vin,
                 date: this.date
             }
-            axios.post('http://localhost:48656/clt/edit', {
-                data: data
-            })
-            .then(this.$emit('refresh'));
+            await axios.post('http://localhost:48656/clt/edit', { data: data });
+            this.$emit('refresh');
         },
 
         closePopUp(){

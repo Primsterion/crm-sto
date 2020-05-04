@@ -143,9 +143,4 @@ export default {
     align-items: center;
 }
 
-.employer-form form{
-    width: 100%;
-    max-width: 750px;
-}
-
 </style>

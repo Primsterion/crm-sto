@@ -37,6 +37,7 @@
         </div>
         <div class="modal" v-if="showModalAddWork">
             <div class="modal-content">
+                <h1>Добавление работы</h1>
                 <div class="form-group">
                     <p>Выбор клиента</p>
                     <select name="" v-model="newWork.client_id">
@@ -122,6 +123,9 @@ export default {
             await this.getAllClients();
             await this.getAllEmployers();
             await this.getAllWorkTypes();
+            this.workFormInfo.selectedWorkTypes = [];
+            this.workFormInfo.currentWorkType = {};
+            this.workFormInfo.total = 0;
             this.showModalAddWork = true;
         },
 
@@ -181,15 +185,28 @@ export default {
 
         saveWork(){
             let work_types_id = [];
+            let valid = true;
             for(const work of this.workFormInfo.selectedWorkTypes){
                 work_types_id.push(work.work_type_id);
             }
 
             this.newWork.work_types_id = work_types_id.join(';');
 
-            axios.post('http://localhost:48656/works/add', {data: this.newWork })
-                .then(this.getWorks)
-                .then(() => {this.showModalAddWork = false});
+            for(const prop in this.newWork){
+                if(!this.newWork[prop]){
+                    valid = false;
+                }
+            }
+
+            if(valid){
+                 axios.post('http://localhost:48656/works/add', {data: this.newWork })
+                    .then(this.getWorks)
+                    .then(() => {this.showModalAddWork = false});
+            }else{
+                alert("Заполните все поля!");
+            }
+
+           
         },
         
         saveStatus(){

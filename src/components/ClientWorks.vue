@@ -111,8 +111,8 @@ export default {
 
 <style scoped>
     .client-works{
-        width: 80%;
-        min-height: 300px;
+        max-width: 80%;
+        min-height: 150px;
         padding: 20px;
         position: fixed;
         top: 50%;
@@ -155,6 +155,10 @@ export default {
     .clients-content{
         max-height: 400px;
         overflow-y: scroll;
+    }
+
+    .works-not-found{
+       width: 100%;
     }
 
     h1{

@@ -1,5 +1,6 @@
 <template>
     <form class="popup-add-employer-form modal-form">
+        <h1>Добавление сотрудника</h1>
         <ErrorAlert text="Ошибка! Заполните все поля" v-if="error"/>
         <p>ФИО</p>
         <input type="text" name="fio" v-model="fio">
