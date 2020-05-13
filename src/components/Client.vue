@@ -8,7 +8,7 @@
       <div class="client-action">
           <button class="primary" @click="works">Работы</button>
           <button class="edit" @click="edit">Изменить</button>
-          <button class="delete" @click="remove">Удалить</button>
+          <button class="delete" @click="remove">&times;</button>
       </div>
   </div>
 </template>

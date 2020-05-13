@@ -52,6 +52,14 @@ select{
   width: 100%;
 }
 
+.aligncenter{
+  text-align: center;
+}
+
+.container{
+  width: 80%;
+  margin: 20px auto;
+}
 
 
 #app {
